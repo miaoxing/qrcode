@@ -4,7 +4,7 @@ namespace Miaoxing\Qrcode\Controller;
 
 class Qrcode extends \miaoxing\plugin\BaseController
 {
-    protected $guestPages =  ['qrcode/show'];
+    protected $guestPages = ['qrcode/show'];
 
     public function showAction($req)
     {
@@ -13,11 +13,11 @@ class Qrcode extends \miaoxing\plugin\BaseController
             'rules' => [
                 'text' => [
 
-                ]
+                ],
             ],
             'names' => [
-                'text' => '文本内容'
-            ]
+                'text' => '文本内容',
+            ],
         ]);
         if (!$validator->isValid()) {
             return $this->err($validator->getFirstMessage());
@@ -39,7 +39,7 @@ class Qrcode extends \miaoxing\plugin\BaseController
         // 生成二维码图片资源对象
         $enc = \QRencode::factory($level, $size, 0);
         $tab = $enc->encode($text);
-        $maxSize = (int)(QR_PNG_MAXIMUM_SIZE / (count($tab)));
+        $maxSize = (int) (QR_PNG_MAXIMUM_SIZE / (count($tab)));
         $image = $this->image($tab, min($size, $maxSize), 0);
 
         // TODO 支持远程图片
@@ -88,7 +88,7 @@ class Qrcode extends \miaoxing\plugin\BaseController
             $this->response->setHeader('Content-type', 'image/png');
         } else {
             // 下载图片
-            $this->response->setHeader(array(
+            $this->response->setHeader([
                 'Content-Description' => 'File Transfer',
                 'Content-Type' => 'application/x-download',
                 'Content-Disposition' => 'attachment;filename=qrcode.png',
@@ -97,7 +97,7 @@ class Qrcode extends \miaoxing\plugin\BaseController
                 'Cache-Control' => 'must-revalidate',
                 'Pragma' => 'public',
                 'Content-Length' => strlen($content),
-            ));
+            ]);
         }
 
         return $content;
@@ -126,7 +126,7 @@ class Qrcode extends \miaoxing\plugin\BaseController
         $imgW = $w + 2 * $outerFrame;
         $imgH = $h + 2 * $outerFrame;
 
-        $base_image = ImageCreate($imgW, $imgH);
+        $base_image = imagecreate($imgW, $imgH);
 
         // convert a hexadecimal color code into decimal format (red = 255 0 0, green = 0 255 0, blue = 0 0 255)
         $r1 = round((($fore_color & 0xFF0000) >> 16), 5);
@@ -138,24 +138,23 @@ class Qrcode extends \miaoxing\plugin\BaseController
         $g2 = round((($back_color & 0x00FF00) >> 8), 5);
         $b2 = round(($back_color & 0x0000FF), 5);
 
-
-        $col[0] = ImageColorAllocate($base_image, $r2, $g2, $b2);
-        $col[1] = ImageColorAllocate($base_image, $r1, $g1, $b1);
+        $col[0] = imagecolorallocate($base_image, $r2, $g2, $b2);
+        $col[1] = imagecolorallocate($base_image, $r1, $g1, $b1);
 
         imagefill($base_image, 0, 0, $col[0]);
 
-        for ($y = 0; $y < $h; $y++) {
-            for ($x = 0; $x < $w; $x++) {
+        for ($y = 0; $y < $h; ++$y) {
+            for ($x = 0; $x < $w; ++$x) {
                 if ($frame[$y][$x] == '1') {
-                    ImageSetPixel($base_image, $x + $outerFrame, $y + $outerFrame, $col[1]);
+                    imagesetpixel($base_image, $x + $outerFrame, $y + $outerFrame, $col[1]);
                 }
             }
         }
 
-        $target_image = ImageCreate($imgW * $pixelPerPoint, $imgH * $pixelPerPoint);
-        ImageCopyResized($target_image, $base_image, 0, 0, 0, 0, $imgW * $pixelPerPoint, $imgH * $pixelPerPoint, $imgW,
+        $target_image = imagecreate($imgW * $pixelPerPoint, $imgH * $pixelPerPoint);
+        imagecopyresized($target_image, $base_image, 0, 0, 0, 0, $imgW * $pixelPerPoint, $imgH * $pixelPerPoint, $imgW,
             $imgH);
-        ImageDestroy($base_image);
+        imagedestroy($base_image);
 
         return $target_image;
     }
