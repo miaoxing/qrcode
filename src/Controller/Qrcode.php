@@ -74,7 +74,7 @@ class Qrcode extends \miaoxing\plugin\BaseController
      * @param int $fore_color
      * @return resource
      *
-     * @codingStandardsIgnoreFile
+     * @codingStandardsIgnoreStart
      * @SuppressWarnings(PHPMD)
      */
     protected function image(
@@ -121,5 +121,6 @@ class Qrcode extends \miaoxing\plugin\BaseController
         imagedestroy($base_image);
 
         return $target_image;
+        // @codingStandardsIgnoreEnd
     }
 }
