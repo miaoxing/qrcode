@@ -36,7 +36,7 @@ class Qrcode extends \miaoxing\plugin\BaseController
         $enc = \QRencode::factory($level, $size, 0);
         $tab = $enc->encode($text);
         $maxSize = (int) (QR_PNG_MAXIMUM_SIZE / (count($tab)));
-        $image = $this->image($tab, min($size, $maxSize), 0);
+        $image = $this->image($tab, min($size, $maxSize), 1);
 
         // 生成图片内容
         ob_start();
