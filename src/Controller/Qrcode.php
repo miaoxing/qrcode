@@ -2,7 +2,7 @@
 
 namespace Miaoxing\Qrcode\Controller;
 
-class Qrcode extends \miaoxing\plugin\BaseController
+class Qrcode extends \Miaoxing\Plugin\BaseController
 {
     protected $guestPages = ['qrcode/show'];
 
