@@ -2,7 +2,7 @@
 
 namespace Miaoxing\Qrcode;
 
-class Plugin extends \miaoxing\plugin\BasePlugin
+class Plugin extends \Miaoxing\Plugin\BasePlugin
 {
     /**
      * {@inheritdoc}
